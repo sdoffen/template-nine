@@ -1,19 +1,18 @@
 using AutoMapper;
 
-namespace Template9.Common.Mapper
+namespace Template9.Common.Mapper;
+
+public abstract class DomainMapperConfiguration : IAutoMapperConfiguration
 {
-    public abstract class DomainMapperConfiguration : IAutoMapperConfiguration
+    public IMapper Mapper { get; protected set; }
+
+    protected DomainMapperConfiguration()
     {
-        public IMapper Mapper { get; protected set; }
+        var config = ConfigureMapper();
+        config.AssertConfigurationIsValid();
 
-        protected DomainMapperConfiguration()
-        {
-            var config = ConfigureMapper();
-            config.AssertConfigurationIsValid();
-
-            Mapper = config.CreateMapper();
-        }
-
-        protected abstract MapperConfiguration ConfigureMapper();
+        Mapper = config.CreateMapper();
     }
+
+    protected abstract MapperConfiguration ConfigureMapper();
 }
