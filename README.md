@@ -20,44 +20,6 @@ Packages can be update when new versions have been release using:
 dotnet new update
 ```
 
-# Project Templates
-
-> [!NOTE]
-> After creation, each template will attempt to restore dependencies and add all created projects to the solution.
-
-| Template                       | Short Name  | Description                                                                |
-|--------------------------------|-------------|----------------------------------------------------------------------------|
-| Template9 Composition Layer    | [compose]() | Composition layer for wiring up controllers and dependencies for a WebApi. |
-| Template9 Controllers Layer    | [ctrl]()    | Controllers and DTOs                                                       |
-| Template9 Engines Layer        | [engine]()  | Abstractions, default implementation, and test package for engines         |
-| Template9 Infrastructure Layer | [infra]()   | Abstractions, default implementation, and test package for infrastructure  |
-| Template9 Managers Layer       | [manager]() | Abstractions, default implementation, and test package for managers        |
-| Template9 Mapper Layer         | [mapper]()  | Abstractions, default implementation, and test package for mapper          |
-| Template9 Utilities Layer      | [util]()    | Implementation and test package for utilities                              |
-
-## Options
-
-| Option                 | Description                                                                                          |
-|------------------------|------------------------------------------------------------------------------------------------------|
-| `--name <OUTPUT_NAME>` | The name for the created output. If no name is specified, the name of the current directory is used. |
-
-### Controllers Layer
-
-The controllers layer had an additional optional parameter used in naming the generated sample controller and DTOs. The parameter defaults to "Sample".
-
-| Option              | Default Value | Description                                                      |
-|---------------------|:-------------:|------------------------------------------------------------------|
-| `--partial <VALUE>` | Sample        | Used to name generated controllers and DTOs; should be singular. |
-
-### Mapper Layer
-
-The mapping layer comes in two flavors. By default, the mapping layer will include all of the abstractions needed for `IAutoMapperConfiguration`. In instances where you want these abstractions to be provided using a [external library](), the name of the package can be supplied - along with an optional semver expression - and that will be used instead.
-
-| Option                           | Default Value | Description                                                                                        |
-|----------------------------------|:-------------:|----------------------------------------------------------------------------------------------------|
-| `--mapper-pkg <PKG_NAME>`        | N/A           | The name of the package that will provided the `IAutoMapperConfiguration` abstractions.            |
-| `--mapper-pkg-version <PKG_VER>` | 1.0.*         | The version of the above package. Must be a valid version that can be restored via a Nuget source. |
-
 # Solution Templates
 
 | Template                       | Short Name | Description                                                               |
@@ -110,4 +72,44 @@ For the secrets library, an additional `cloud` option must be specified to indic
 
 ## Using GitHub
 
-When the `--use-github` option is set the output will include a `.github` directory which will include a [CODEOWNERS](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners) file as well as default workflows for pull requests and publishing. The `--github-org` option will be required, and will be used to update the workflows to push packages to the correct organization.
+When using GitHub Packages to either resolve dependencies or push Nuget packages, you will need to provided the template with the name of the GitHub organization to use. For personal projects, this will be your GitHub username. For organization projects, this will be the name of the organization.
+
+This value is provided to the template using the `--github-org` option, followed by the name of the organization. When used, the output will include a `.github` directory which will include a [CODEOWNERS](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners) file as well as default workflows for pull requests and publishing.
+
+# Project Templates
+
+> [!NOTE]
+> After creation, each template will attempt to restore dependencies and add all created projects to the solution.
+
+| Template                       | Short Name  | Description                                                                |
+|--------------------------------|-------------|----------------------------------------------------------------------------|
+| Template9 Composition Layer    | [compose]() | Composition layer for wiring up controllers and dependencies for a WebApi. |
+| Template9 Controllers Layer    | [ctrl]()    | Controllers and DTOs                                                       |
+| Template9 Engines Layer        | [engine]()  | Abstractions, default implementation, and test package for engines         |
+| Template9 Infrastructure Layer | [infra]()   | Abstractions, default implementation, and test package for infrastructure  |
+| Template9 Managers Layer       | [manager]() | Abstractions, default implementation, and test package for managers        |
+| Template9 Mapper Layer         | [mapper]()  | Abstractions, default implementation, and test package for mapper          |
+| Template9 Utilities Layer      | [util]()    | Implementation and test package for utilities                              |
+
+## Options
+
+| Option                 | Description                                                                                          |
+|------------------------|------------------------------------------------------------------------------------------------------|
+| `--name <OUTPUT_NAME>` | The name for the created output. If no name is specified, the name of the current directory is used. |
+
+### Controllers Layer
+
+The controllers layer had an additional optional parameter used in naming the generated sample controller and DTOs. The parameter defaults to "Sample".
+
+| Option              | Default Value | Description                                                      |
+|---------------------|:-------------:|------------------------------------------------------------------|
+| `--partial <VALUE>` | Sample        | Used to name generated controllers and DTOs; should be singular. |
+
+### Mapper Layer
+
+The mapping layer comes in two flavors. By default, the mapping layer will include all of the abstractions needed for `IAutoMapperConfiguration`. In instances where you want these abstractions to be provided using a [external library](), the name of the package can be supplied - along with an optional semver expression - and that will be used instead.
+
+| Option                           | Default Value | Description                                                                                        |
+|----------------------------------|:-------------:|----------------------------------------------------------------------------------------------------|
+| `--mapper-pkg <PKG_NAME>`        | N/A           | The name of the package that will provided the `IAutoMapperConfiguration` abstractions.            |
+| `--mapper-pkg-version <PKG_VER>` | 1.0.*         | The version of the above package. Must be a valid version that can be restored via a Nuget source. |
