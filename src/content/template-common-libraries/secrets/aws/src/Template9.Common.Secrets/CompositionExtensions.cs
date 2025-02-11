@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Amazon;
 using Kralizek.Extensions.Configuration.Internal;
 using Microsoft.Extensions.Configuration;
 using Template9.Common.Extensions;
@@ -22,9 +23,10 @@ public static class CompositionExtensions
     /// </summary>
     /// <param name="config"></param>
     /// <param name="environmentName"></param>
+    /// <param name="regionEndpoint"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
-    public static IConfigurationManager ConfigureStandardSecretsManager(this IConfigurationManager config, string environmentName)
+    public static IConfigurationManager ConfigureStandardSecretsManager(this IConfigurationManager config, string environmentName, RegionEndpoint? regionEndpoint = null)
     {
         if (string.IsNullOrWhiteSpace(environmentName))
             throw new ArgumentException("Environment name must be provided.", nameof(environmentName));
@@ -44,7 +46,7 @@ public static class CompositionExtensions
                     ? key[(prefix.Length + 1)..]
                     : key;
             };
-        });
+        }, region: regionEndpoint);
 
         return config;
     }

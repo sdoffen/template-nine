@@ -4,7 +4,7 @@ Provides extension methods on `IConfigurationManager` for configuring AWS Secret
 
 | Method                          | Parameter                | Description                                            |
 |---------------------------------|--------------------------|--------------------------------------------------------|
-| ConfigureStandardSecretsManager | string environment name  | Uses the default keygen based on the environment name. |
+| ConfigureStandardSecretsManager | string environment name <br/> optional `RegionEndpoint`  | Uses the default keygen based on the environment name, optionally sets the region. |
 | ConfigureStandardSecretsManager | action for configuration | Provide a custom configuration for the project.        |
 
 # Conventions
@@ -63,3 +63,5 @@ AWS Secrets Manager does not allow the use of the colon (`:`), which is the char
 ## Dependencies
 
 This packages depends on [Kralizek.Extensions.Configuration.AWSSecretsManager](https://www.nuget.org/packages/Kralizek.Extensions.Configuration.AWSSecretsManager)
+
+There is a common issue that occurs when attempting to use this package with newer version of the AWS SDK. The issue **and how to resolve it** is documented in [the source repository](https://github.com/Kralizek/AWSSecretsManagerConfigurationExtensions/issues/45).
