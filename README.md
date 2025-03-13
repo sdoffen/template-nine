@@ -28,6 +28,7 @@ dotnet new update
 | Template9 Nuget Client Library | client     | Nuget package project for a client class library                          |
 | Template9 Common Libraries     | common     | Templates for creating a set of common libraries.                         |
 | Template9 Empty Repository     | repo       | Template to generate a default set of assets for an empty repository.     |
+| Template9 Postman Repository   | postman    | Template for creating a Postman API design repository.                    |
 
 ## Options
 
@@ -40,7 +41,7 @@ dotnet new update
 | `-add-nuget`               | When used with the `--github-org` flag, will add workflows to push to Nuget.org                      |
 
 > [!NOTE]
-> Only `--name` and `--github-org` flags are valid for Template9 Empty Repository (*repo*).
+> Only `--name` and `--github-org` flags are valid for Template9 Empty Repository (*repo*), and only `--name` is valid for  Template9 Postman Repository (*postman*).
 
 ### Common Library Options
 
