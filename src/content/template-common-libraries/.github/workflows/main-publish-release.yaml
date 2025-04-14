@@ -45,7 +45,7 @@ jobs:
       run: dotnet --list-sdks
 
     # Checks out the code from the repository using a deep clone
-    # The deep close in necessary to access the full history of the repository
+    # The deep clone is necessary to access the full history of the repository
     # so that the NerdBank.GitVersioning tool can determine the version number
     - name: Checkout Code (Deep Clone)
       uses: actions/checkout@v4
@@ -101,7 +101,7 @@ jobs:
       run: dotnet --list-sdks
 
     # Checks out the code from the repository using a deep clone
-    # The deep close in necessary to access the full history of the repository
+    # The deep clone is necessary to access the full history of the repository
     # so that the NerdBank.GitVersioning tool can determine the version number
     - name: Checkout Code (Deep Clone)
       uses: actions/checkout@v4

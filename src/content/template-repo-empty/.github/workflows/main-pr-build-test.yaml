@@ -39,13 +39,9 @@ jobs:
     - name: Display Available .NET SDKs
       run: dotnet --list-sdks
 
-    # Checks out the code from the repository using a deep clone
-    # The deep close in necessary to access the full history of the repository
-    # so that the NerdBank.GitVersioning tool can determine the version number
-    - name: Checkout code (Deep Clone)
+    # Checks out the code from the repository
+    - name: Checkout code
       uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
 
     # Configure NuGet to use GitHub Packages as a source
     - name: Configure NuGet for GitHub Packages
