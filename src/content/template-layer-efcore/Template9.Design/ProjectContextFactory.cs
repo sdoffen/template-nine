@@ -9,6 +9,8 @@ public class ProjectContextFactory : IDesignTimeDbContextFactory<ProjectContext>
     public ProjectContext CreateDbContext(string[] args)
     {
         var configuration = new ConfigurationManager();
+        // Add configuration sources as needed, e.g. AWS Secrets or Azure Key Vault.
+        // Order is important! The last configuration source will override any previous ones.
         configuration.AddJsonFile("appsettings.Design.json");
 
         var services = new ServiceCollection()

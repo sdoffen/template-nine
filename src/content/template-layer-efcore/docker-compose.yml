@@ -1,0 +1,14 @@
+name: 'template9-database'
+services:
+  postgres:
+    image: postgres:latest
+    container_name: template9_database_server
+    environment:
+      POSTGRES_DB: Template9
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: StrongPassword123
+    volumes:
+      - ./.sql-volume:/var/lib/postgresql/data
+    ports:
+      - "65432:5432"
+    restart: unless-stopped
