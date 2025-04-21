@@ -1,4 +1,4 @@
-namespace Template9.Test;
+namespace Template9.Tests;
 
 [CollectionDefinition("IntegrationTest")]
 public class IntegrationTest : ICollectionFixture<IntegrationTestFixture>

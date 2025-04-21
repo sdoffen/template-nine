@@ -1,9 +1,13 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-// using Npgsql;
-// using MySql.Data.MySqlClient;
+#if (provider == "mssql")
+using Microsoft.Data.SqlClient;
+#elif (provider == "mysql")
+using MySql.Data.MySqlClient;
+#elif (provider == "postgres")
+using Npgsql;
+#endif
 
 namespace Template9;
 
@@ -39,9 +43,13 @@ public static class CompositionExtensions
                 builder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             }
 
-            // builder.UseNpgsql(GetConnectionString(options), contextOptions =>
-            // builder.UseMySQL(GetConnectionString(options), contextOptions =>
+#if (provider == "mssql")
             builder.UseSqlServer(GetConnectionString(options), contextOptions =>
+#elif (provider == "mysql")
+            builder.UseMySQL(GetConnectionString(options), contextOptions =>
+#elif (provider == "postgres")
+            builder.UseNpgsql(GetConnectionString(options), contextOptions =>
+#endif
             {
                 if (options.UseMigrationsAssembly && !string.IsNullOrEmpty(options.MigrationsAssembly))
                 {
@@ -50,13 +58,19 @@ public static class CompositionExtensions
 
                 if (options.EnableRetryOnFailure)
                 {
-                    // var errorCodes = options.ErrorCodesToAdd;
+#if (provider != "postgres")
+                    // Convert error codes from string to int
                     var errorCodes = options.ErrorCodesToAdd?.Select(code => int.Parse(code)).ToList() ?? null;
 
+#endif
                     contextOptions.EnableRetryOnFailure(
                         options.MaxRetryCount,
                         TimeSpan.FromSeconds(options.MaxRetryDelaySeconds),
+#if (provider == "postgres")
+                        options.ErrorCodesToAdd
+#elif (provider != "postgres")
                         errorCodes
+#endif
                     );
                 }
             });
@@ -65,22 +79,7 @@ public static class CompositionExtensions
 
     private static string GetConnectionString(DatabaseOptions options)
     {
-        // var builder = new NpgsqlConnectionStringBuilder
-        // {
-        //     Host = options.Host,
-        //     Port = options.Port,
-        //     Database = options.DatabaseName,
-        //     Username = options.Username,
-        // };
-
-        // var builder = new MySqlConnectionStringBuilder
-        // {
-        //     Server = options.Host,
-        //     Port = (uint)options.Port,
-        //     Database = options.DatabaseName,
-        //     UserID = options.Username,
-        // };
-
+#if (provider == "mssql")
         var builder = new SqlConnectionStringBuilder
         {
             DataSource = (options.Port > 0)
@@ -89,6 +88,23 @@ public static class CompositionExtensions
             InitialCatalog = options.DatabaseName,
             UserID = options.Username,
         };
+#elif (provider == "mysql")
+        var builder = new MySqlConnectionStringBuilder
+        {
+            Server = options.Host,
+            Port = (uint)options.Port,
+            Database = options.DatabaseName,
+            UserID = options.Username,
+        };
+#elif (provider == "postgres")
+        var builder = new NpgsqlConnectionStringBuilder
+        {
+            Host = options.Host,
+            Port = options.Port,
+            Database = options.DatabaseName,
+            Username = options.Username,
+        };
+#endif
 
         if (!string.IsNullOrEmpty(options.Password))
         {

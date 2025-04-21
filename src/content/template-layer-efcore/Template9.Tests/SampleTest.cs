@@ -1,4 +1,4 @@
-﻿namespace Template9.Test;
+﻿namespace Template9.Tests;
 
 // This collection attribute is used to tell the test framework to
 // inject the IntegrationTestFixture into the test class.
