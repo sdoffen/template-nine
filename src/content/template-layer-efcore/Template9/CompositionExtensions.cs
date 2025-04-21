@@ -22,6 +22,8 @@ public static class CompositionExtensions
 
         var optionsAction = GetDbContextOptionsAction(databaseOptions);
 
+        services.AddDbContextFactory<ProjectContext>(optionsAction);
+
         if (databaseOptions.UseDbContextPooling)
         {
             services.AddDbContextPool<ProjectContext>(optionsAction);
