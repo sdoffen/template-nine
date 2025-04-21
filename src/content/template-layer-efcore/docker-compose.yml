@@ -1,14 +1,55 @@
-name: 'template9-database'
+name: '$(SolutionName)'
+
 services:
-  postgres:
-    image: postgres:latest
-    container_name: template9_database_server
+  database:
+    container_name: database_server
+#if (provider == 'mssql')
+    image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
-      POSTGRES_DB: Template9
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: StrongPassword123
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=$(DatabasePwd)
+      - MSSQL_PID=Express
     volumes:
-      - ./.sql-volume:/var/lib/postgresql/data
+      - sql_data:/var/opt/mssql
+#elif (provider == 'mysql')
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: $(DatabasePwd)
+      MYSQL_DATABASE: $(DatabaseName)
+      MYSQL_USER: $(DatabaseUser)
+      MYSQL_PASSWORD: $(DatabasePwd)
+    volumes:
+      - sql_data:/var/lib/mysql
+#elif (provider == 'postgres')
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: $(DatabaseName)
+      POSTGRES_USER: $(DatabaseUser)
+      POSTGRES_PASSWORD: $(DatabasePwd)
+    volumes:
+      - sql_data:/var/lib/postgresql/data
+#endif
     ports:
-      - "65432:5432"
+      - "$(DatabasePort):$(DatabasePort)"
     restart: unless-stopped
+
+#if (provider == 'mssql')
+  db_init:
+    image: mcr.microsoft.com/mssql-tools
+    container_name: mssql_db_init
+    depends_on:
+      - database
+    # if there are errors when attempting to connect to the database, increase the sleep time
+    entrypoint: >
+      /bin/bash -c "
+        sleep 30; 
+        /opt/mssql-tools/bin/sqlcmd -S database_server -U sa -P $(DatabasePwd) -Q 'CREATE DATABASE $(DatabaseName)';
+        /opt/mssql-tools/bin/sqlcmd -S database_server -U sa -P $(DatabasePwd) -d $(DatabaseName) -Q \"CREATE LOGIN $(DatabaseUser) WITH PASSWORD = '$(DatabasePwd)'\"; 
+        /opt/mssql-tools/bin/sqlcmd -S database_server -U sa -P $(DatabasePwd) -d $(DatabaseName) -Q \"CREATE USER $(DatabaseUser) FOR LOGIN $(DatabaseUser)\";
+        /opt/mssql-tools/bin/sqlcmd -S database_server -U sa -P $(DatabasePwd) -d $(DatabaseName) -Q 'ALTER ROLE db_owner ADD MEMBER $(DatabaseUser)';
+      "
+
+#endif
+volumes:
+  sql_data:
+    driver: local

@@ -2,7 +2,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Template9.Test;
+namespace Template9.Tests;
 
 public class IntegrationTestFixture
 {

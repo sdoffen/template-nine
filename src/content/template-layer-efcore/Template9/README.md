@@ -33,3 +33,20 @@ Template9 is implemented using several projects in order separate the concerns o
 
 ## Project Organization
 
+## Docker Container
+
+This project template includes a docker container running a database instance. The test project is already configured to use the database instance in this docker container. With Docker running locally, start the container by executing the following from the command line:
+
+```
+$ docker compose up -d
+```
+
+Connect to the database in the container using a client application like [DBeaver](https://dbeaver.io/) or [Azure Data Studio](https://azure.microsoft.com/en-us/products/data-studio) using the following settings:
+
+| Property | Value     |
+|----------|-----------|
+| Host     | localhost |
+| Database | $(DatabaseName) |
+| Port     | $(DatabasePort) |
+| Username | $(DatabaseUser) |
+| Password | $(DatabasePwd) |
