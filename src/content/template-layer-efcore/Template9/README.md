@@ -10,8 +10,10 @@ Template9 is implemented using several projects in order separate the concerns o
 |----------------------|--------------------------------------------------------|
 | Template9            | Interface implementations, as well as the DbContext    |
 | Template9.Design     | Executable project used for database design operations |
-| Template9.Migrations | Database migrations                                    |
+| Template9.Migrations | Database migrations, [see documentation][migration]    |
 | Template9.Test       | Integration tests for Template9 implementations        |
+
+[migration]: ../Template9.Migrations/README.md
 
 ### Dependency Graph
 
@@ -33,14 +35,25 @@ flowchart BT
 Use the following guidelines to implement repository interfaces.
 
 - Implement each repository interface in its own directory.
-- Each directory will contain a `CompositionExtensions` class
-- Each directory will have subdirectories for `Commands` and `Queries`
-- Each command and query will have an interface and an implementation
-- The only methods defined on commands and queries will be named `Execute`
-- Multiple `Execute` methods may be defined
-- An instance of `ILogger<T>` and `IDbContextFactory<ProjectDbContext>` will be injected into each command and query
-- Each interface implementation will have all of the command and query interfaces injected into it.
-- Interface implementations and command and query class will be registered in the directory level `CompositionExtensions` as a singleton
+- Each directory will contain:
+  - subdirectories for `Commands` and `Queries`
+    - Each command and query will have an interface and an implementation
+    - The only methods defined on commands and queries will be named `ExecuteAsync`
+    - Multiple `ExecuteAsync` methods may be defined
+    - An instance of `ILogger<T>` and `IDbContextFactory<ProjectDbContext>` will be injected into each command and query
+    - It is the responsibility of the command or query to catch database exceptions and wrap them in domain exceptions; the layers that consume the interfaces should not catch exceptions specific to the database provider
+  - an interface implementation
+    - Each interface implementation will have all of the command and query interfaces injected into it.
+  - a static `CompositionExtensions` class
+    - Interface implementations and command and query class will be registered in the directory level `CompositionExtensions` as a singleton
+- Unit tests should exist to ensure that all interfaces are registered with the container
+- Unit tests should exist to ensure that the repositories correctly wrap the commands and queries
+- Integration tests should exist for each command and query
+  - Each test should implement the `IDisposable` interface
+  - Data needed to execute the test should be created using an `Initialize` method
+  - Data created to execute the tests should be removed when the test is complete using the `Dispose` method.
+
+An example using an `IPersonRepository` interface might therefore look like this:
 
 ```
 Template9/
@@ -69,7 +82,13 @@ Template9/
 This project template includes a docker container running a database instance. The test project is already configured to use the database instance in this docker container. With Docker running locally, start the container by executing the following from the command line:
 
 ```
-$ docker compose up -d
+docker compose up -d
+```
+
+You can tear down both the services and the associated volumes by running:
+
+```
+docker compose down -v
 ```
 
 Connect to the database in the container using a client application like [DBeaver](https://dbeaver.io/) or [Azure Data Studio](https://azure.microsoft.com/en-us/products/data-studio) using the following settings:

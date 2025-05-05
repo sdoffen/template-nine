@@ -2,6 +2,9 @@
 
 A quickstart guide to using [Entity Framework Core Migrations](https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/?tabs=dotnet-core-cli) with this project.
 
+> [!IMPORTANT]
+> When setting up the EF Core project for the first time, be sure to first follow the steps for [setting up migrations](./SETUP.MD) using an external project. Otherwise the commands below my fail or produce unexpected results.
+
 ## Target Database
 
 The migration commands will target the database specified in the `DatabaseOptions` section of the [`appsettings.Design.json`](../Template9.Design/appsettings.Design.json) file.
@@ -12,13 +15,13 @@ In order to run and manage migrations using Entity Framework Core and this proje
 
 ```bash
 # Install
-$ dotnet tool install --global dotnet-ef
+dotnet tool install --global dotnet-ef
 
 # Update
-$ dotnet tool update --global dotnet-ef
+dotnet tool update --global dotnet-ef
 
 # Verify Installation
-$ dotnet ef
+dotnet ef
 ```
 
 ## Required CLI Options
@@ -46,7 +49,7 @@ This list of common migration commands is not exhaustive. See the [documentation
 To display a list of available migrations:
 
 ```bash
-$ dotnet ef migrations list --project ./src/Template9.Migrations --startup-project ./src/Template9.Design
+dotnet ef migrations list --project ./src/Template9.Migrations --startup-project ./src/Template9.Design
 ```
 
 ### Check For Pending Changes
@@ -54,7 +57,7 @@ $ dotnet ef migrations list --project ./src/Template9.Migrations --startup-proje
 To determine if there are any model changes that need to have a migration created:
 
 ```bash
-$ dotnet ef migrations has-pending-model-changes --project ./src/Template9.Migrations --startup-project ./src/Template9.Design
+dotnet ef migrations has-pending-model-changes --project ./src/Template9.Migrations --startup-project ./src/Template9.Design
 ```
 
 ### Create a New Migration
@@ -62,10 +65,10 @@ $ dotnet ef migrations has-pending-model-changes --project ./src/Template9.Migra
 > [!TIP]
 > It is recommended to use Pascal case when naming migrations, to avoid the static analysis warning [CS8981](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-messages/warning-waves#cs8981---the-type-name-only-contains-lower-cased-ascii-characters). Nevertheless, this warning is disabled in the project file of the migrations project.
 
-Create a new migration named `<MyMigration>`:
+Create a new migration using the desired name. In the example, the migration is named `MyMigration`.
 
 ```bash
-$ dotnet ef migrations add <MigrationName> --project ./src/Template9.Migrations --startup-project ./src/Template9.Design
+dotnet ef migrations add MyMigration --project ./src/Template9.Migrations --startup-project ./src/Template9.Design
 ```
 
 ### Apply Migrations to Lower Environments
@@ -73,7 +76,7 @@ $ dotnet ef migrations add <MigrationName> --project ./src/Template9.Migrations 
 Update the target database to the latest migrations:
 
 ```bash
-$ dotnet ef database update --project ./src/Template9.Migrations --startup-project ./src/Template9.Design
+dotnet ef database update --project ./src/Template9.Migrations --startup-project ./src/Template9.Design
 ```
 
 > [!WARNING]
@@ -84,18 +87,44 @@ $ dotnet ef database update --project ./src/Template9.Migrations --startup-proje
 Remove the last migration that was applied, rolling back the changes from that migration:
 
 ```bash
-$ dotnet ef migrations remove --project ./src/Template9.Migrations --startup-project ./src/Template9.Design
+dotnet ef migrations remove --project ./src/Template9.Migrations --startup-project ./src/Template9.Design
 ```
 
 ### Apply Migrations to Higher Environments
 
-Updates to production (higher) environments should be done via scripts. The command for creating the scripts requires parameters for the starting migration and the ending migration. Command line options provide the output file for the script. The `--idempotent` flag is not required, but is recommended to ensure the script does not fail unnecessarily.
+Updates to production (higher) environments should be done via scripts. Script generation accepts the following two arguments to indicate which range of migrations should be generated:
+- The from migration should be the last migration applied to the database before running the script. If no migrations have been applied, specify 0 (this is the default).
+- The to migration is the last migration that will be applied to the database after running the script. This defaults to the last migration in your project.
+- If no starting and ending values are provided, then the command generates a SQL script from a blank database to the latest migration.
+
+| Flag           | Description                                  |
+|----------------|----------------------------------------------|
+| `--output`     | Specified the output file for the migration. |
+| `--idempotent` | Generates a script that will check which migrations have already been applied, and only apply the missing ones. |
+
+Example:
 
 ```bash
-$ dotnet ef migrations script 0 1 --idempotent --output ./script.sql --project ./src/Template9.Migrations --startup-project ./src/Template9.Design
+dotnet ef migrations script StartingMigration EndingMigration --idempotent --output ./migration.sql --project ./src/Template9.Migrations --startup-project ./src/Template9.Design
 ```
 
-> [!TIP]
-> Migrations may be identified by name or by ID. The number 0 is a special case that means before the first migration. Defaults to 0.
+The script can then be applied to the target database from the command line:
+
+<!--#if (provider == "mssql") -->
+```
+sqlcmd -S <server_name> -U <username> -P <password> -d <database_name> -i migration.sql
+```
+<!--#elif (provider == "mysql")-->
+```
+mysql -h <host> -u <username> -p <database_name> < migration.sql
+```
+<!--#elif (provider == "postgres")-->
+```
+psql -h <host> -U <username> -d <database_name> -f migration.sql
+```
+<!--#endif -->
 
 ### Remove Migrations from Higher Environments
+
+Using the same command used to generate a migration script, if our starting migration (from) is newer than the ending migration (to), then a rollback migration script is generated. Rollback scripts can be applied to the database using the same tools that were used to apply migrations.
+
