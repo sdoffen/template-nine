@@ -38,7 +38,7 @@ Use the following guidelines to implement repository interfaces.
 - Each command and query will have an interface and an implementation
 - The only methods defined on commands and queries will be named `Execute`
 - Multiple `Execute` methods may be defined
-- An instance of `ILogger<T>` and `IDbContextFactory<ProjectContext>` will be injected into each command and query
+- An instance of `ILogger<T>` and `IDbContextFactory<ProjectDbContext>` will be injected into each command and query
 - Each interface implementation will have all of the command and query interfaces injected into it.
 - Interface implementations and command and query class will be registered in the directory level `CompositionExtensions` as a singleton
 
@@ -61,7 +61,7 @@ Template9/
 │   └── PersonRepository.cs
 ├── CompositionExtensions.cs
 ├── DatabaseOptions.cs
-└── ProjectContext.cs
+└── ProjectDbContext.cs
 ```
 
 ## Docker Container
