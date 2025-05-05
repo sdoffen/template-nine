@@ -2,9 +2,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Template9;
 
-public class ProjectContext : DbContext
+public class ProjectDbContext : DbContext
 {
-    public ProjectContext(DbContextOptions<ProjectContext> options) : base(options) { }
+    public ProjectDbContext(DbContextOptions<ProjectDbContext> options) : base(options) { }
 
     // Define your DbSets here
     // public DbSet<YourEntity> YourEntities { get; set; }

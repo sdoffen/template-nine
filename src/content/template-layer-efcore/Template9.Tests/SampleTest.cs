@@ -5,13 +5,13 @@
 [Collection("IntegrationTest")]
 public class SampleTest
 {
-    private readonly ProjectContext _projectContext;
+    private readonly ProjectDbContext _context;
 
     public SampleTest(IntegrationTestFixture fixture)
     {
         // Because the DbContext is provided via dependency injection,
         // we do not need to worry about disposing it.
-        _projectContext = fixture.GetRequiredService<ProjectContext>();
+        _context = fixture.GetRequiredService<ProjectDbContext>();
     }
 
     [Fact]

@@ -22,16 +22,19 @@ public static class CompositionExtensions
 
         var optionsAction = GetDbContextOptionsAction(databaseOptions);
 
-        services.AddDbContextFactory<ProjectContext>(optionsAction);
+        services.AddDbContextFactory<ProjectDbContext>(optionsAction);
 
         if (databaseOptions.UseDbContextPooling)
         {
-            services.AddDbContextPool<ProjectContext>(optionsAction);
+            services.AddDbContextPool<ProjectDbContext>(optionsAction);
         }
         else
         {
-            services.AddDbContext<ProjectContext>(optionsAction);
+            services.AddDbContext<ProjectDbContext>(optionsAction);
         }
+
+        services.AddHealthChecks()
+            .AddDbContextCheck<ProjectDbContext>("Project Database");
 
         return services;
     }

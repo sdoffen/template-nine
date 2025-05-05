@@ -59,6 +59,11 @@
       "defaultValue": "StrongPassword123!",
       "replaces": "$(DatabasePwd)"
     },
+    "dbcontext": {
+      "type": "parameter",
+      "datatype": "string",
+      "description": "The name of the database context to use for Entity Framework Core."
+    },
     "DbNameFirstSegment": {
       "type": "generated",
       "dataType": "string",
@@ -129,6 +134,26 @@
         "fallbackVariableName": "DbPortGenerated"
       },
       "replaces": "$(DatabasePort)"
+    },
+    "DbContextGenerated": {
+      "type": "generated",
+      "generator": "regex",
+      "parameters": {
+        "source": "DbNameFirstSegment",
+        "steps": [
+          { "regex": "$", "replacement": "DbContext" }
+        ]
+      }
+    },
+    "DbContextReplacer": {
+      "type": "generated",
+      "generator": "coalesce",
+      "parameters": {
+        "sourceVariableName": "dbcontext",
+        "fallbackVariableName": "DbContextGenerated"
+      },
+      "replaces": "ProjectDbContext",
+      "fileRename": "ProjectDbContext"
     }
   },
   "postActions": [

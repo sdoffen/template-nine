@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Template9.Design;
 
-public class ProjectContextFactory : IDesignTimeDbContextFactory<ProjectContext>
+public class ProjectDbContextFactory : IDesignTimeDbContextFactory<ProjectDbContext>
 {
-    public ProjectContext CreateDbContext(string[] args)
+    public ProjectDbContext CreateDbContext(string[] args)
     {
         var configuration = new ConfigurationManager();
         // Add configuration sources as needed, e.g. AWS Secrets or Azure Key Vault.
@@ -17,6 +17,6 @@ public class ProjectContextFactory : IDesignTimeDbContextFactory<ProjectContext>
             .RegisterDbContext(configuration);
 
         var provider = services.BuildServiceProvider();
-        return provider.GetRequiredService<ProjectContext>();
+        return provider.GetRequiredService<ProjectDbContext>();
     }
 }
