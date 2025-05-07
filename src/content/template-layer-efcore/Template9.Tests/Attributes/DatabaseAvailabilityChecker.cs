@@ -1,3 +1,6 @@
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
 namespace Template9.Tests.Attributes;
 
 internal static class DatabaseAvailabilityChecker
