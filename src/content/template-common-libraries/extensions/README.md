@@ -48,8 +48,8 @@ The following methods are provided as extensions on generics (T).
 
 The following methods are provided as extensions on strings for converting to an enum.
 
-| Method                        | Description                                                                                      |
-|-------------------------------|--------------------------------------------------------------------------------------------------|
+| Method                            | Description                                                                                      |
+|-----------------------------------|--------------------------------------------------------------------------------------------------|
 | ToEnum&lt;TEnum&gt;               | Converts a case-insensitive string to a enum value. Throws an exception if no value is found.    |
 | ToEnum&lt;TEnum&gt;(defaultValue) | Converts a case-insensitive string to a enum value. Returns `defaultValue` if no value is found. |
 
@@ -70,7 +70,9 @@ The following methods are provided as extensions on strings.
 
 ## IConfiguration Extensions
 
-| Method          | Returns | Description                                                                 |
-|-----------------|---------|-----------------------------------------------------------------------------|
-| IsToolExecuting | bool    | Returns true if the application is running in the context of a tool.        |
-| ExecutingTool   | [Tool](Template9.Common.Extensions/Tool.cs)    | Returns the tool currently being executed. |
+| Method          | Returns      | Description                                                                 |
+|-----------------|--------------|-----------------------------------------------------------------------------|
+| IsToolExecuting | bool         | Returns true if the application is running in the context of a tool.        |
+| ExecutingTool   | [Tool][tool] | Returns the tool currently being executed. |
+
+[tool]: ./src/Template9.Common.Extensions/Tool.cs

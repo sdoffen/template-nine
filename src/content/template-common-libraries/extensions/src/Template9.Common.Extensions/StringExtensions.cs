@@ -26,7 +26,7 @@ public static class StringExtensions
     {
         foreach (var x in values)
         {
-            if (value.Contains(x, StringComparison.CurrentCultureIgnoreCase)) return true;
+            if (value.IndexOf(x, StringComparison.CurrentCultureIgnoreCase) >= 0) return true;
         }
 
         return false;
@@ -134,6 +134,6 @@ public static class StringExtensions
         var builder = new List<string> { path.Trim().TrimEnd('/') };
         sections.ToList().ForEach(x => builder.Add(x.Trim().TrimEnd('/').TrimStart('/')));
 
-        return string.Join('/', builder);
+        return string.Join("/", builder);
     }
 }

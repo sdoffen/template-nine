@@ -2,6 +2,8 @@
 
 public static class IEnumerableExtensions
 {
+    private static readonly Random _random = new Random();
+
     /// <summary>
     /// Returns true if the sequence is NOT null and has items.
     /// </summary>
@@ -43,6 +45,6 @@ public static class IEnumerableExtensions
     /// <remarks>This is an O(n) operation.</remarks>
     public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> collection)
     {
-        return collection.OrderBy(x => Random.Shared.Next());
+        return collection.OrderBy(_ => _random.Next());
     }
 }
