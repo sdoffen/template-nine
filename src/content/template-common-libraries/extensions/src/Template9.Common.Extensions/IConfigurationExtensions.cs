@@ -15,7 +15,7 @@ public static class IConfigurationExtensions
     /// <returns></returns>
     public static bool IsToolExecuting(this IConfiguration configuration)
     {
-        return !string.IsNullOrWhiteSpace(configuration.GetValue<string>(toolVariableName));
+        return !string.IsNullOrWhiteSpace(configuration[toolVariableName]);
     }
 
     /// <summary>
@@ -25,8 +25,8 @@ public static class IConfigurationExtensions
     /// <returns></returns>
     public static Tool ExecutingTool(this IConfiguration configuration)
     {
-        var tool = configuration.GetValue<string>(toolVariableName);
-        if (string.IsNullOrEmpty(tool)) return Tool.None;
+        var tool = configuration[toolVariableName];
+        if (string.IsNullOrWhiteSpace(tool)) return Tool.None;
         return tool.ToEnum(Tool.Unknown);
     }
 }
