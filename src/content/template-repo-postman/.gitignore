@@ -1,7 +1,0 @@
-# - Prevent addition of OS specific file explorer files
-Thumbs.db
-.DS_Store
-
-# - Prevent IDE specific folders
-.idea
-.vscode
