@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "identity": "Template9.GitIgnore",
+  "name": ".NET GitIgnore",
+  "shortName": "gi",
+  "description": "Creates a .gitignore file using opinionated conventions.",
+  "sourceName": "Template9",
+
+  "sources": [
+    {
+      "source": "../content/gitignore",
+      "include": [ "gitignore" ],
+      "rename": {
+        "gitignore": ".gitignore"
+      }
+    }
+  ]
+}
